@@ -9,27 +9,41 @@ This guide walks you through setting up Jenkins for this Spring Boot Maven proje
 
 ---
 
-## 1. Configure Maven as a Global Tool in Jenkins
+## 1. Configure Java JDK and Maven as Global Tools in Jenkins
 
-### Steps:
+### Configure Java JDK:
 1. **Login to Jenkins** dashboard
 2. Navigate to **Manage Jenkins** → **Tools** (or **Global Tool Configuration**)
-3. Scroll down to the **Maven** section
-4. Click **Add Maven**
+3. Scroll down to the **JDK** section
+4. Click **Add JDK**
 5. Configure:
-   - **Name**: `Maven-3.9.6` (or your preferred name)
+   - **Name**: `JDK` (this is what Jenkinsfile expects)
+   - **Install automatically**: Check this box
+   - **Version**: Select appropriate JDK version (e.g., `jdk-17`, `jdk-21`, etc.)
+     - **Note**: This project requires Java 25, so ensure compatible JDK is installed
+   - **Install from Adoptium**: Select this option (or your preferred JDK provider)
+6. **OR** if Java is already installed on Jenkins server:
+   - **Name**: `JDK`
+   - **JAVA_HOME**: `C:\Program Files\Java\jdk-XX` (path to your JDK installation on Windows)
+   - Do NOT check "Install automatically"
+
+### Configure Maven:
+1. In the same **Tools** page, scroll down to the **Maven** section
+2. Click **Add Maven**
+3. Configure:
+   - **Name**: `M3` (this is what Jenkinsfile expects)
    - **Install automatically**: Check this box
    - **Version**: Select `3.9.6` (or latest stable version)
    - **Install from Apache**: Select this option
-6. Click **Save**
+4. Click **Save**
 
 ### Alternative: Manual Maven Installation
 If you prefer to use a manually installed Maven:
-- **Name**: `Maven-3.9.6`
-- **MAVEN_HOME**: `/path/to/maven` (path to your Maven installation)
+- **Name**: `M3`
+- **MAVEN_HOME**: `C:\Program Files\Apache\maven` (path to your Maven installation)
 - Do NOT check "Install automatically"
 
-**Note**: The Jenkinsfile references `Maven-3.9.6` - ensure the name matches your configuration.
+**Note**: The Jenkinsfile references `JDK` for Java and `M3` for Maven - ensure the names match your configuration.
 
 ---
 
@@ -120,13 +134,21 @@ The `Jenkinsfile` (root directory) contains a declarative pipeline.
 
 ## Troubleshooting
 
+### JAVA_HOME not defined / Java not found:
+- Verify JDK tool name matches in Jenkinsfile (`JDK`)
+- Check JDK is configured in Global Tool Configuration
+- Ensure JAVA_HOME points to valid JDK installation
+- For Windows: Check path format `C:\Program Files\Java\jdk-XX`
+- Project requires Java 25 - ensure compatible JDK is installed
+
 ### Maven not found:
-- Verify Maven tool name matches in Jenkinsfile (`Maven-3.9.6`)
+- Verify Maven tool name matches in Jenkinsfile (`M3`)
 - Check Maven is configured in Global Tool Configuration
 - Ensure Maven path is correct
 
 ### Build fails:
 - Check Java version compatibility (project uses Java 25)
+- Verify JAVA_HOME is set correctly
 - Verify all dependencies are available in Maven repository
 - Check console output for specific error messages
 
