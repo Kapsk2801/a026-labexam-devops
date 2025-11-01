@@ -3,8 +3,6 @@ pipeline {
     
     tools {
         maven 'M3'  // This references the Maven tool configured in Jenkins Global Tool Configuration
-        // Alternative: If your Maven tool has a different name, replace 'M3' with that name
-        // Common names: 'M3', 'maven', 'Maven', or the exact name from Global Tool Configuration
     }
     
     options {
@@ -16,7 +14,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                bat 'mvn clean compile'
+                script {
+                    if (isUnix()) {
+                        sh 'mvn clean compile'
+                    } else {
+                        bat 'mvn clean compile'
+                    }
+                }
             }
             post {
                 success {
@@ -31,7 +35,13 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                bat 'mvn test'
+                script {
+                    if (isUnix()) {
+                        sh 'mvn test'
+                    } else {
+                        bat 'mvn test'
+                    }
+                }
             }
             post {
                 always {
@@ -50,7 +60,13 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging the application...'
-                bat 'mvn package -DskipTests'
+                script {
+                    if (isUnix()) {
+                        sh 'mvn package -DskipTests'
+                    } else {
+                        bat 'mvn package -DskipTests'
+                    }
+                }
             }
             post {
                 success {
