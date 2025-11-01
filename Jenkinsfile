@@ -2,7 +2,9 @@ pipeline {
     agent any
     
     tools {
-        maven 'Maven-3.9.6'  // This references the Maven tool configured in Jenkins Global Tool Configuration
+        maven 'M3'  // This references the Maven tool configured in Jenkins Global Tool Configuration
+        // Alternative: If your Maven tool has a different name, replace 'M3' with that name
+        // Common names: 'M3', 'maven', 'Maven', or the exact name from Global Tool Configuration
     }
     
     options {
